@@ -31,8 +31,8 @@ const Index = () => (
 							Scan a Product
 						</span>
 						<span className='text-md text-slate-600 mt-3'>
-							Hold your phone's camera up to a product's QR code to add it to
-							your cart.
+							Hold your phone&apos;s camera up to a product&apos;s QR code to
+							add it to your cart.
 						</span>
 						<button
 							type='button'
