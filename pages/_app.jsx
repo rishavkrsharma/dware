@@ -1,10 +1,9 @@
-import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'next-themes'
 import '@/styles/globals.css'
 import { RecoilRoot } from 'recoil'
 import { useEffect } from 'react'
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }) {
 	useEffect(() => {
 		if (
 			typeof window !== 'undefined' &&
