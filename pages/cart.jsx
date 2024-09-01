@@ -72,7 +72,8 @@ function Cart() {
 									className='flex justify-between items-center mb-2'
 								>
 									<span>
-										{item.name} - ${item.price.toFixed(2)} x {item.quantity}
+										{item.itemDescription} - ${item.price.toFixed(2)} x{' '}
+										{item.quantity}
 									</span>
 									<div className='flex items-center'>
 										<button

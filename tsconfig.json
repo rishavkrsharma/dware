@@ -20,5 +20,5 @@
 		"incremental": true
 	},
 	"exclude": ["node_modules"],
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/story.jsx", "pages/index.jsx", "pages/cart.jsx", "pages/_document.jsx", "pages/_app.jsx", "components/section.jsx", "components/page.jsx", "components/bottom-nav.jsx", "components/appbar.jsx"]
 }

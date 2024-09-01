@@ -100,15 +100,19 @@ function Index() {
 
 	const renderProductDetails = () => (
 		<div className='flex flex-col items-center justify-center'>
-			{productDetails && productDetails?.imageUrl ? (
-				<img
-					src={productDetails.imageUrl}
-					alt={productDetails.name}
-					style={{ maxWidth: '100%', height: 'auto' }}
-				/>
-			) : (
-				<p>No image available</p>
-			)}
+			<div className='max-h-md items-center max-w-md shadow-lg mb-5 rounded-2xl'>
+				{productDetails && productDetails?.imageUrl ? (
+					<img
+						className='rounded-2xl'
+						src={productDetails.imageUrl}
+						alt={productDetails.name}
+						style={{ maxWidth: '100%', height: 'auto' }}
+					/>
+				) : (
+					<p>No image available</p>
+				)}
+			</div>
+
 			<h2 className='text-2xl font-bold mb-2'>
 				{productDetails?.itemDescription}
 			</h2>
