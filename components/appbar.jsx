@@ -6,7 +6,7 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline'
 
 const links = [
 	{ name: 'Cart', href: '/cart' },
-	{ name: 'Recipes', href: '/recipes' },
+	// { name: 'Recipes', href: '/recipes' },
 ]
 
 const Appbar = () => {
