@@ -1,9 +1,9 @@
 import Page from '@/components/page'
 import Section from '@/components/section'
 import React, { useEffect, useState } from 'react'
-import { QrReader } from 'react-qr-reader'
 import { useSetRecoilState } from 'recoil'
 import { cartState } from '../recoil/atoms'
+import { Scanner } from '@yudiel/react-qr-scanner'
 
 function Index() {
 	const [pageState, setPageState] = useState('initial')
@@ -56,18 +56,9 @@ function Index() {
 				Hold your phone's camera up to a product's QR scan
 			</span>
 			<div className='w-full max-w-sm '>
-				<QrReader
-					onResult={(result, error) => {
-						if (!!result) {
-							handleScan(result?.text)
-						}
-						if (!!error) {
-							console.info(error)
-							handleError(error)
-						}
-					}}
-					constraints={{ facingMode: 'environment' }}
-					className='w-full'
+				<Scanner
+					onScan={(result) => handleScan(result[0]?.rawValue)}
+					onError={(error) => handleError(error)}
 				/>
 			</div>
 			<button
@@ -119,7 +110,7 @@ function Index() {
 			<p className='text-xl mb-4'>Price ₹{productDetails?.price.toFixed(2)}</p>
 			<button
 				onClick={addToCart}
-				className='inline-flex items-center my-5 px-3 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+				className='inline-flex items-center my-5 px-3 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500'
 			>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
