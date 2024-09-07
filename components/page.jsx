@@ -12,7 +12,7 @@ const Page = ({ title, children }) => (
 
 		<Appbar />
 
-		<main className='mx-auto max-w-7xl px-safe'>
+		<main className='mx-auto max-w-7xl px-safe '>
 			<div className='p-4'>{children}</div>
 		</main>
 

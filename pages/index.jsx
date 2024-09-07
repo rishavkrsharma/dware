@@ -163,7 +163,7 @@ function Index() {
 			</span>
 			<button
 				onClick={() => setPageState('scanning')}
-				className='inline-flex items-center my-5 px-3 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-red-500 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+				className='inline-flex items-center my-5 px-3 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
 			>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
@@ -203,7 +203,7 @@ function Index() {
 	return (
 		<Page>
 			<Section>
-				<h2 className='text-lg md:text-3xl sm:text-xl font-semibold bg-gradient-to-br from-red-700 to-fuchsia-600 bg-clip-text text-transparent pb-2'>
+				<h2 className='text-lg md:text-3xl sm:text-xl font-semibold bg-gradient-to-br from-primary to-fuchsia-600 bg-clip-text text-transparent pb-2'>
 					Welcome to DWare, choose from wide range of products
 				</h2>
 
