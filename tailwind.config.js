@@ -8,8 +8,9 @@ module.exports = {
 		extend: {
 			colors: {
 				primary: '#19433C',
+				primaryHover: '#112e29',
 			},
 		},
 	},
-	plugins: [require('tailwindcss-safe-area')],
+	plugins: [require('tailwindcss-safe-area'), require('@tailwindcss/forms')],
 }

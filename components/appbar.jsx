@@ -37,7 +37,7 @@ const Appbar = () => {
 	return (
 		<div>
 			{deferredPrompt && (
-				<div className='relative isolate flex items-center gap-x-6 overflow-hidden bg-gray-900 px-6 py-2 sm:px-3.5 sm:before:flex-1'>
+				<div className='relative isolate flex items-center gap-x-6 overflow-hidden bg-black px-6 py-2 sm:px-3.5 sm:before:flex-1'>
 					<div
 						aria-hidden='true'
 						className='absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl'
@@ -76,7 +76,7 @@ const Appbar = () => {
 						</p>
 						<button
 							onClick={handleInstall}
-							className='flex-none rounded-full bg-gray-200 px-3.5 py-1 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-200'
+							className='flex-none rounded-full bg-gray-50 px-3.5 py-1 text-sm font-semibold text-gray-800 shadow-sm hover:bg-green-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-200'
 						>
 							Install App <span aria-hidden='true'>&rarr;</span>
 						</button>
@@ -110,21 +110,6 @@ const Appbar = () => {
 									</Popover.Button>
 								</div>
 							</div>
-							{/* <div className='hidden space-x-10 md:flex md:ml-10'>
-							{navigation.map((item) => (
-								<Link
-									key={item.name}
-									href={item.href}
-									className={`text-sm ${
-										router.pathname === item.href
-											? 'text-indigo-500 dark:text-indigo-400'
-											: 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50'
-									}`}
-								>
-									{item.name}
-								</Link>
-							))}
-						</div> */}
 						</div>
 						<div className='hidden md:flex'>
 							<Link
@@ -169,7 +154,7 @@ const Appbar = () => {
 										DWare
 									</Link>
 									<div className='-mr-2'>
-										<Popover.Button className='bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500'>
+										<Popover.Button className='bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary'>
 											<span className='sr-only'>Close menu</span>
 											<XIcon className='h-6 w-6' aria-hidden='true' />
 										</Popover.Button>
@@ -182,7 +167,7 @@ const Appbar = () => {
 											href={item.href}
 											className={` block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 ${
 												router.pathname === item.href
-													? 'text-indigo-500 dark:text-indigo-400'
+													? 'text-primary'
 													: 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-500'
 											}`}
 										>
@@ -191,12 +176,12 @@ const Appbar = () => {
 									))}
 								</div>
 
-								<Link
+								{/* <Link
 									href='/'
-									className='block w-full px-5 py-3 text-center font-medium text-primary bg-gray-50 hover:bg-red-400'
+									className='block w-full px-5 py-3 text-center font-medium text-primary bg-gray-50 hover:bg-green-50'
 								>
 									Log In
-								</Link>
+								</Link> */}
 							</div>
 						</Popover.Panel>
 					</Transition>

@@ -2,6 +2,7 @@ import { ThemeProvider } from 'next-themes'
 import '@/styles/globals.css'
 import { RecoilRoot } from 'recoil'
 import { useEffect } from 'react'
+import { Toaster } from 'react-hot-toast'
 
 export default function App({ Component, pageProps }) {
 	useEffect(() => {
@@ -12,7 +13,6 @@ export default function App({ Component, pageProps }) {
 		) {
 			const wb = window.workbox
 			const promptNewVersionAvailable = () => {
-				// Implement your own prompt notification here
 				if (confirm('A new version is available. Reload to update?')) {
 					wb.addEventListener('controlling', () => {
 						window.location.reload()
@@ -29,10 +29,11 @@ export default function App({ Component, pageProps }) {
 	return (
 		<ThemeProvider
 			attribute='class'
-			defaultTheme='light' //dark or light or system
+			defaultTheme='light'
 			disableTransitionOnChange
 		>
 			<RecoilRoot>
+				<Toaster />
 				<Component {...pageProps} />
 			</RecoilRoot>
 		</ThemeProvider>

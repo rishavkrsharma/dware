@@ -13,7 +13,7 @@ const Page = ({ title, children }) => (
 		<Appbar />
 
 		<main className='mx-auto max-w-7xl px-safe '>
-			<div className='p-4'>{children}</div>
+			<div className='p-2'>{children}</div>
 		</main>
 
 		<BottomNav />
