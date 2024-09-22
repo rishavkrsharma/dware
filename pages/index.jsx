@@ -9,6 +9,8 @@ import toast from 'react-hot-toast'
 function Index() {
 	const [pageState, setPageState] = useState('initial')
 	const [productDetails, setProductDetails] = useState(null)
+	const [search, setSearch] = useState('')
+	const [loading, setLoading] = useState(false)
 	const setCart = useSetRecoilState(cartState)
 
 	const addToCart = () => {
@@ -29,20 +31,24 @@ function Index() {
 		toast.success('Item added to cart successfully!')
 	}
 
-	const handleScan = async (result) => {
-		if (result) {
+	const handleScan = async (prodId) => {
+		setLoading(true)
+		if (prodId) {
 			try {
 				const response = await fetch(
-					`https://script.google.com/macros/s/AKfycby1zF5D6r0RR151w-J4CFST0yWFdL_ze0rXqIpcXYL6wK4PRhOn5x62w1bEoDVkDKGJ8Q/exec?action=getProduct&requestedProductId=${result}`,
+					`https://script.google.com/macros/s/AKfycbywxqoMLTpIYIt0hGQeDzohrlhlVs9WbWWLKjx7_BJOrBvlkJttEF8IY2qrtbtisnjc7g/exec?action=getProduct&productCode=${prodId}`,
 				)
+
 				const product = await response.json()
-				toast.success('Item found!')
 				console.log('🚀 ~ handleScan ~ product:', product)
+				toast.success('Item found!')
+				setLoading(false)
 				setProductDetails(product)
 				setPageState('product')
 			} catch (error) {
 				console.error('Error fetching product details:', error)
 				toast.error('Item not found!')
+				setLoading(false)
 				setPageState('initial')
 			}
 		}
@@ -50,6 +56,72 @@ function Index() {
 
 	const renderInitialState = () => (
 		<div className='flex flex-col items-center justify-center'>
+			<span className='text-3xl font-bold text-slate-800 mt-3'>
+				Scan or Search a Product
+			</span>
+
+			<div className='flex flex-row gap-3 my-6'>
+				<div className='relative  rounded-md shadow-sm'>
+					<div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
+						<span className='text-gray-500 sm:text-sm'>
+							<svg
+								xmlns='http://www.w3.org/2000/svg'
+								fill='none'
+								viewBox='0 0 24 24'
+								stroke-width='1.5'
+								stroke='currentColor'
+								class='size-6'
+							>
+								<path
+									stroke-linecap='round'
+									stroke-linejoin='round'
+									d='m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
+								/>
+							</svg>
+						</span>
+					</div>
+					<input
+						id='price'
+						name='price'
+						type='text'
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						placeholder='Enter Product Code'
+						className='block w-full rounded-md border-0 py-1.5 pl-10 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'
+					/>
+				</div>
+
+				<button
+					onClick={() => handleScan(search)}
+					className='inline-flex items-center  px-3 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-primary hover:bg-primaryHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
+				>
+					{loading ? (
+						<>
+							<svg
+								aria-hidden='true'
+								role='status'
+								class='inline w-4 h-4 me-3 text-gray-200 animate-spin dark:text-gray-600'
+								viewBox='0 0 100 101'
+								fill='none'
+								xmlns='http://www.w3.org/2000/svg'
+							>
+								<path
+									d='M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z'
+									fill='currentColor'
+								/>
+								<path
+									d='M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z'
+									fill='#19433C'
+								/>
+							</svg>{' '}
+							<span>Loading...</span>
+						</>
+					) : (
+						'Search'
+					)}
+				</button>
+			</div>
+
 			<div className='p-3 mt-5 rounded-full bg-slate-200 inline-block'>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
@@ -66,13 +138,11 @@ function Index() {
 					/>
 				</svg>
 			</div>
-			<span className='text-3xl font-bold text-slate-800 mt-3'>
-				Scan a Product
-			</span>
 			<span className='text-md text-center text-slate-600 mt-3'>
 				Hold your phone's camera up to a product's QR code to add it to your
 				cart.
 			</span>
+
 			<button
 				onClick={() => setPageState('scanning')}
 				className='inline-flex items-center my-5 px-3 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-primary hover:bg-primaryHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
@@ -142,8 +212,8 @@ function Index() {
 				{productDetails && productDetails?.imageUrl ? (
 					<img
 						className='rounded-2xl'
-						src={productDetails.imageUrl}
-						alt={productDetails.name}
+						src={productDetails?.imageUrl}
+						alt={productDetails?.productCode}
 						style={{ maxWidth: '100%', height: 'auto' }}
 					/>
 				) : (
@@ -151,31 +221,73 @@ function Index() {
 				)}
 			</div>
 
-			<h2 className='text-xl text-center font-bold mb-1'>
-				{productDetails?.itemDescription}
+			<h2 className='text-xl text-center font-bold mb-2'>
+				{productDetails?.productCode}
 			</h2>
-			<p className='text-md mb-4'>Price ₹{productDetails?.price.toFixed(2)}</p>
-			<button
-				onClick={addToCart}
-				className='inline-flex items-center my-2 px-3 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500'
-			>
-				<svg
-					xmlns='http://www.w3.org/2000/svg'
-					fill='none'
-					viewBox='0 0 24 24'
-					stroke-width='1.5'
-					stroke='currentColor'
-					class='size-6'
-				>
-					<path
-						stroke-linecap='round'
-						stroke-linejoin='round'
-						d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z'
-					/>
-				</svg>
+			<p className='text-lg text-center mb-2'>
+				Description - {productDetails?.itemDescription}
+			</p>
 
-				<span className='pl-2'>Add to Cart</span>
-			</button>
+			<p className='text-md mb-2'>
+				Price - ₹{productDetails?.price.toFixed(2)}
+			</p>
+			<p className='text-md mb-2 text-slate-500'>
+				Available units -{' '}
+				{productDetails?.availableItems != ''
+					? productDetails?.availableItems
+					: 'NA'}
+			</p>
+
+			<p className='text-md mb-6 text-center text-slate-500'>
+				Features -{' '}
+				{productDetails?.availableItems != ''
+					? productDetails?.availableItems
+					: 'NA'}
+			</p>
+
+			<div className=''>
+				<button
+					onClick={() => setPageState('')}
+					className='inline-flex items-center my-2 px-3 py-1 mr-3 border  border-primary shadow-sm text-sm leading-4 font-medium rounded-md text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
+				>
+					<svg
+						xmlns='http://www.w3.org/2000/svg'
+						fill='none'
+						viewBox='0 0 24 24'
+						stroke-width='1.5'
+						stroke='currentColor'
+						class='size-6'
+					>
+						<path
+							stroke-linecap='round'
+							stroke-linejoin='round'
+							d='m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
+						/>
+					</svg>
+					<span className='pl-2'>Scan again</span>
+				</button>
+				<button
+					onClick={addToCart}
+					className='inline-flex items-center my-2 px-3 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-primary hover:bg-primaryHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
+				>
+					<svg
+						xmlns='http://www.w3.org/2000/svg'
+						fill='none'
+						viewBox='0 0 24 24'
+						stroke-width='1.5'
+						stroke='currentColor'
+						class='size-6'
+					>
+						<path
+							stroke-linecap='round'
+							stroke-linejoin='round'
+							d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z'
+						/>
+					</svg>
+
+					<span className='pl-2'>Add to Cart</span>
+				</button>
+			</div>
 		</div>
 	)
 
@@ -193,7 +305,7 @@ function Index() {
 	return (
 		<Page>
 			<Section>
-				<h2 className='text-lg md:text-3xl sm:text-xl font-semibold text-primary pb-2'>
+				<h2 className='text-lg px-2 md:text-3xl sm:text-xl font-semibold text-primary pb-2'>
 					Welcome to DWare, choose from wide range of products
 				</h2>
 

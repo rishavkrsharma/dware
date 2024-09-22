@@ -103,12 +103,12 @@ const Appbar = () => {
 								<Link href='/' className='font-medium text-2xl text-slate-50'>
 									DWare
 								</Link>
-								<div className='-mr-2 flex items-center md:hidden'>
+								{/* <div className='-mr-2 flex items-center md:hidden'>
 									<Popover.Button className='bg-slate-100 rounded-md p-2 inline-flex items-center justify-center text-primary hover:bg-slate-200 hover:text-primary focus:outline-none focus:ring-2 focus-ring-inset focus:ring-white'>
 										<span className='sr-only'>Open main menu</span>
 										<MenuIcon className='h-6 w-6' aria-hidden='true' />
 									</Popover.Button>
-								</div>
+								</div> */}
 							</div>
 						</div>
 						<div className='hidden md:flex'>

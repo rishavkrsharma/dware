@@ -152,21 +152,18 @@ function Cart() {
 		}))
 	}
 
-	// const order = [
-	// 	'orderId',
-	// 	'createdBy',
-	// 	'userName',
-	// 	'userContact',
-	// 	'userAddress',
-	// 	'items',
-	// 	'status',
-	// 	'createdOn',
-	// ]
+	// {
+	// 	"imageUrl": "https://www.jaquar.com/images/thumbs/0013983_single-lever-wall-mixer-chrome.jpeg",
+	// 	"price": 10800,
+	// 	"itemDescription": "SINGLE LEVER WALL MIXER WITH PROVISION F",
+	// 	"availableItems": "",
+	// 	"productCode": "KUP-CHR-35117PM",
+	// 	"features": ""
+	// }
 
 	return (
 		<Page>
 			<div className='flex flex-col h-screen bg-white shadow-xl'>
-				{/* Cart Items Section */}
 				<div className='flex-1 overflow-y-auto px-4 py-6 sm:px-6'>
 					<div className='flex items-start justify-between'>
 						<h1 className='text-xl font-medium text-gray-900'>Shopping cart</h1>
@@ -204,61 +201,70 @@ function Cart() {
 										<li key={index} className='flex py-3'>
 											<div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200'>
 												<img
-													src={item.imageUrl}
-													alt={item.itemDescription}
+													src={item?.imageUrl}
+													alt={item?.productCode}
 													className='h-full w-full object-cover object-center'
 												/>
 											</div>
 
 											<div className='ml-4 flex flex-1 flex-col'>
-												<div>
-													<div className='flex justify-between text-base font-medium text-gray-900'>
-														<h3>{item.itemDescription}</h3>
-														<p className='ml-4'>₹{item.price.toFixed(2)}</p>
-													</div>
-													<div className='flex items-center'>
-														<button
-															onClick={() => updateQuantity(index, -1)}
-															className='bg-red-500 text-white p-1 rounded-lg mr-1'
-														>
-															<svg
-																xmlns='http://www.w3.org/2000/svg'
-																fill='none'
-																viewBox='0 0 24 24'
-																stroke-width='1.5'
-																stroke='currentColor'
-																className='size-3'
-															>
-																<path
-																	stroke-linecap='round'
-																	stroke-linejoin='round'
-																	d='M5 12h14'
-																/>
-															</svg>
-														</button>
-														<button
-															onClick={() => updateQuantity(index, 1)}
-															className='bg-green-500 text-white p-1 rounded-lg mr-1'
-														>
-															<svg
-																xmlns='http://www.w3.org/2000/svg'
-																fill='none'
-																viewBox='0 0 24 24'
-																stroke-width='1.5'
-																stroke='currentColor'
-																className='size-3'
-															>
-																<path
-																	stroke-linecap='round'
-																	stroke-linejoin='round'
-																	d='M12 4.5v15m7.5-7.5h-15'
-																/>
-															</svg>
-														</button>
-													</div>
+												<div className='flex mb-1 justify-between text-base font-medium text-gray-900'>
+													<h3>{item.productCode}</h3>
+													<p className='ml-4'>₹{item.price.toFixed(2)}</p>
 												</div>
+												<p className='text-sm'>{item?.itemDescription}</p>
+												<p className='text-sm text-slate-500 mb-1'>
+													Available units -{' '}
+													{item?.availableItems != ''
+														? item?.availableItems
+														: 'NA'}
+												</p>
 												<div className='flex flex-1 items-end justify-between text-sm'>
-													<p className='text-gray-500'>Qty: {item.quantity}</p>
+													<div className='flex flex-row gap-2'>
+														<p className='text-gray-500'>
+															Qty: {item.quantity}
+														</p>
+														<div className='flex items-center'>
+															<button
+																onClick={() => updateQuantity(index, -1)}
+																className='bg-red-500 text-white p-1 rounded-lg mr-1'
+															>
+																<svg
+																	xmlns='http://www.w3.org/2000/svg'
+																	fill='none'
+																	viewBox='0 0 24 24'
+																	stroke-width='1.5'
+																	stroke='currentColor'
+																	className='size-3'
+																>
+																	<path
+																		stroke-linecap='round'
+																		stroke-linejoin='round'
+																		d='M5 12h14'
+																	/>
+																</svg>
+															</button>
+															<button
+																onClick={() => updateQuantity(index, 1)}
+																className='bg-green-500 text-white p-1 rounded-lg mr-1'
+															>
+																<svg
+																	xmlns='http://www.w3.org/2000/svg'
+																	fill='none'
+																	viewBox='0 0 24 24'
+																	stroke-width='1.5'
+																	stroke='currentColor'
+																	className='size-3'
+																>
+																	<path
+																		stroke-linecap='round'
+																		stroke-linejoin='round'
+																		d='M12 4.5v15m7.5-7.5h-15'
+																	/>
+																</svg>
+															</button>
+														</div>
+													</div>
 
 													<div className='flex'>
 														<button

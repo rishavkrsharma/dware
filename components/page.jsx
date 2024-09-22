@@ -11,11 +11,7 @@ const Page = ({ title, children }) => (
 		) : null}
 
 		<Appbar />
-
-		<main className='mx-auto max-w-7xl px-safe '>
-			<div className='p-2'>{children}</div>
-		</main>
-
+		<main className='mx-auto max-w-7xl px-safe '>{children}</main>
 		<BottomNav />
 	</>
 )

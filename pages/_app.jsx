@@ -1,10 +1,12 @@
 import { ThemeProvider } from 'next-themes'
 import '@/styles/globals.css'
-import { RecoilRoot } from 'recoil'
+import { RecoilRoot, useRecoilValue, useSetRecoilState } from 'recoil'
+import { authState } from '../recoil/atoms'
 import { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
+import Login from 'components/login'
 
-export default function App({ Component, pageProps }) {
+function AppContent({ Component, pageProps }) {
 	useEffect(() => {
 		if (
 			typeof window !== 'undefined' &&
@@ -26,6 +28,22 @@ export default function App({ Component, pageProps }) {
 		}
 	}, [])
 
+	const isAuthenticated = useRecoilValue(authState)
+	const setAuth = useSetRecoilState(authState)
+
+	if (!isAuthenticated) {
+		return <Login />
+	}
+
+	return (
+		<>
+			<Toaster />
+			<Component {...pageProps} />
+		</>
+	)
+}
+
+export default function App({ Component, pageProps }) {
 	return (
 		<ThemeProvider
 			attribute='class'
@@ -33,8 +51,7 @@ export default function App({ Component, pageProps }) {
 			disableTransitionOnChange
 		>
 			<RecoilRoot>
-				<Toaster />
-				<Component {...pageProps} />
+				<AppContent Component={Component} pageProps={pageProps} />
 			</RecoilRoot>
 		</ThemeProvider>
 	)

@@ -30,3 +30,8 @@ export const cartTotalState = selector({
 		return cart.reduce((total, item) => total + item.price * item.quantity, 0)
 	},
 })
+
+export const authState = atom({
+	key: 'authState',
+	default: true,
+})
