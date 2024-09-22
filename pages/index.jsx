@@ -96,7 +96,7 @@ function Index() {
 					className='inline-flex items-center  px-3 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-primary hover:bg-primaryHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
 				>
 					{loading ? (
-						<>
+						<div className='item-center'>
 							<svg
 								aria-hidden='true'
 								role='status'
@@ -114,8 +114,8 @@ function Index() {
 									fill='#19433C'
 								/>
 							</svg>{' '}
-							<span>Loading...</span>
-						</>
+							{/* <span>Loading...</span> */}
+						</div>
 					) : (
 						'Search'
 					)}
@@ -240,9 +240,7 @@ function Index() {
 
 			<p className='text-md mb-6 text-center text-slate-500'>
 				Features -{' '}
-				{productDetails?.availableItems != ''
-					? productDetails?.availableItems
-					: 'NA'}
+				{productDetails?.features != '' ? productDetails?.features : 'NA'}
 			</p>
 
 			<div className=''>
@@ -309,7 +307,7 @@ function Index() {
 					Welcome to DWare, choose from wide range of products
 				</h2>
 
-				<div className='bg-white overflow-hidden shadow sm:rounded-lg '>
+				<div className='bg-white overflow-y-auto shadow sm:rounded-lg '>
 					<div className='px-4 py-6 sm:p-6'>{renderContent()}</div>
 				</div>
 			</Section>

@@ -41,7 +41,7 @@ function Cart() {
 			formData.customerPhone,
 			formData.customerAddress,
 			cart,
-			'draft',
+			'in-progress',
 			createdOn,
 		)
 
@@ -126,7 +126,7 @@ function Cart() {
 		const formattedItems = items
 			.map(
 				(item) =>
-					`- ${item.itemDescription} (x${item.quantity}) @ ₹${item.price} each\n`,
+					`- ${item.productCode} ${item.itemDescription}\n Quantity: ${item.quantity} @ ₹${item.price}/unit Available Stock: ${item.availableItems}\n Image: ${item.imageUrl}`,
 			)
 			.join('\n\n')
 
@@ -169,7 +169,7 @@ function Cart() {
 						<h1 className='text-xl font-medium text-gray-900'>Shopping cart</h1>
 					</div>
 
-					<div className='my-8'>
+					<div className='my-10'>
 						{cart.length === 0 ? (
 							<div className='flex flex-col h-full items-center justify-center'>
 								<p>Your cart is empty</p>
