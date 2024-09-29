@@ -28,16 +28,14 @@ function AppContent({ Component, pageProps }) {
 		}
 	}, [])
 
-	const isAuthenticated = useRecoilValue(authState)
-	const setAuth = useSetRecoilState(authState)
+	const auth = useRecoilValue(authState)
 
-	if (!isAuthenticated) {
+	if (!auth.isAuthenticated) {
 		return <Login />
 	}
 
 	return (
 		<>
-			<Toaster />
 			<Component {...pageProps} />
 		</>
 	)
@@ -51,6 +49,7 @@ export default function App({ Component, pageProps }) {
 			disableTransitionOnChange
 		>
 			<RecoilRoot>
+				<Toaster />
 				<AppContent Component={Component} pageProps={pageProps} />
 			</RecoilRoot>
 		</ThemeProvider>

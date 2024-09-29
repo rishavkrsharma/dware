@@ -3,14 +3,18 @@ import { useRouter } from 'next/router'
 import { Popover, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useState } from 'react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
+import { authState } from '../recoil/atoms'
+import { useSetRecoilState } from 'recoil'
 
 const links = [
 	{ name: 'Cart', href: '/cart' },
-	// { name: 'Recipes', href: '/recipes' },
+	// { name: 'Orders', href: '/orders' },
+	{ name: 'Update Inventory', href: '/updateInventory' },
 ]
 
 const Appbar = () => {
 	const router = useRouter()
+	const setAuth = useSetRecoilState(authState)
 	const [deferredPrompt, setDeferredPrompt] = useState(null)
 
 	useEffect(() => {
@@ -32,6 +36,13 @@ const Appbar = () => {
 				setDeferredPrompt(null)
 			})
 		}
+	}
+
+	const logout = () => {
+		setAuth({
+			isAuthenticated: false,
+			user: null,
+		})
 	}
 
 	return (
@@ -103,12 +114,12 @@ const Appbar = () => {
 								<Link href='/' className='font-medium text-2xl text-slate-50'>
 									DWare
 								</Link>
-								{/* <div className='-mr-2 flex items-center md:hidden'>
+								<div className='-mr-2 flex items-center md:hidden'>
 									<Popover.Button className='bg-slate-100 rounded-md p-2 inline-flex items-center justify-center text-primary hover:bg-slate-200 hover:text-primary focus:outline-none focus:ring-2 focus-ring-inset focus:ring-white'>
 										<span className='sr-only'>Open main menu</span>
 										<MenuIcon className='h-6 w-6' aria-hidden='true' />
 									</Popover.Button>
-								</div> */}
+								</div>
 							</div>
 						</div>
 						<div className='hidden md:flex'>
@@ -176,12 +187,12 @@ const Appbar = () => {
 									))}
 								</div>
 
-								{/* <Link
-									href='/'
+								<button
+									onClick={logout}
 									className='block w-full px-5 py-3 text-center font-medium text-primary bg-gray-50 hover:bg-green-50'
 								>
-									Log In
-								</Link> */}
+									Log Out
+								</button>
 							</div>
 						</Popover.Panel>
 					</Transition>

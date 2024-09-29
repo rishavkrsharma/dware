@@ -33,5 +33,8 @@ export const cartTotalState = selector({
 
 export const authState = atom({
 	key: 'authState',
-	default: true,
+	default: {
+		isAuthenticated: false,
+		user: null,
+	},
 })

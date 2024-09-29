@@ -1,42 +1,22 @@
 import Page from '@/components/page'
 import Section from '@/components/section'
-import React, { useEffect, useState } from 'react'
-import { useSetRecoilState } from 'recoil'
-import { cartState } from '../recoil/atoms'
+import React, { useState } from 'react'
 import { Scanner } from '@yudiel/react-qr-scanner'
 import toast from 'react-hot-toast'
 
-function Index() {
+function Cart() {
 	const [pageState, setPageState] = useState('initial')
 	const [productDetails, setProductDetails] = useState(null)
 	const [search, setSearch] = useState('')
 	const [loading, setLoading] = useState(false)
-	const setCart = useSetRecoilState(cartState)
-
-	const addToCart = () => {
-		setCart((prevCart) => {
-			const existingItem = prevCart.find(
-				(item) => item.itemDescription === productDetails.itemDescription,
-			)
-			if (existingItem) {
-				return prevCart.map((item) =>
-					item.itemDescription === productDetails.itemDescription
-						? { ...item, quantity: item.quantity + 1 }
-						: item,
-				)
-			} else {
-				return [...prevCart, { ...productDetails, quantity: 1 }]
-			}
-		})
-		toast.success('Item added to cart successfully!')
-	}
+	const [quantity, setQuantity] = useState('')
 
 	const handleScan = async (prodId) => {
 		setLoading(true)
 		if (prodId) {
 			try {
 				const response = await fetch(
-					`https://script.google.com/macros/s/AKfycbywxqoMLTpIYIt0hGQeDzohrlhlVs9WbWWLKjx7_BJOrBvlkJttEF8IY2qrtbtisnjc7g/exec?action=getProduct&productCode=${prodId}`,
+					`https://script.google.com/macros/s/AKfycbyo-LkqKlF5fFx46UawDgxpPjdQkLGnKk_TK6cmrt9DOtmbKMiAWhXDJjKeT2WFMNNW/exec?action=getProduct&productCode=${prodId}`,
 				)
 
 				const product = await response.json()
@@ -206,12 +186,35 @@ function Index() {
 		</div>
 	)
 
+	const updateQuantity = async (code, quantity) => {
+		console.log('🚀 ~ updateQuantity ~ code:', code, quantity)
+		setLoading(true)
+		if (code) {
+			try {
+				const response = await fetch(
+					`https://script.google.com/macros/s/AKfycbyo-LkqKlF5fFx46UawDgxpPjdQkLGnKk_TK6cmrt9DOtmbKMiAWhXDJjKeT2WFMNNW/exec?action=update&productCode=${code}&quantity=${quantity}`,
+				)
+				const product = await response.json()
+				console.log('🚀 ~ updateQuantity ~ product:', product)
+				toast.success('Quantity Updated!')
+				setLoading(false)
+				setProductDetails(product)
+				setPageState('product')
+			} catch (error) {
+				console.error('Error fetching product details:', error)
+				toast.error('Quantity Update Failed!')
+				setLoading(false)
+				setPageState('initial')
+			}
+		}
+	}
+
 	const renderProductDetails = () => (
 		<div className='flex flex-col items-center justify-center'>
-			<div className='max-h-md items-center max-w-60 shadow-lg mb-5 rounded-2xl'>
+			<div className='items-center max-w-60 mb-5 rounded-2xl'>
 				{productDetails && productDetails?.imageUrl ? (
 					<img
-						className='rounded-2xl'
+						className='rounded-2xl max-h-md shadow-lg'
 						src={productDetails?.imageUrl}
 						alt={productDetails?.productCode}
 						style={{ maxWidth: '100%', height: 'auto' }}
@@ -243,47 +246,38 @@ function Index() {
 				{productDetails?.features != '' ? productDetails?.features : 'NA'}
 			</p>
 
-			<div className=''>
+			<div className='relative w-screen px-6 rounded-md shadow-sm'>
+				<input
+					id='quantity'
+					name='quantity'
+					type='text'
+					value={quantity}
+					onChange={(e) => setQuantity(e.target.value)}
+					placeholder='Enter Updated Quantity Code'
+					className='block flex-1 w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'
+				/>
+			</div>
+			<p className='text-sm mt-1 text-red-600'>
+				Note: You are updating quantity for{' '}
+				{new Date().toLocaleString('default', { month: 'long' })}
+			</p>
+
+			<div className='pt-2'>
 				<button
 					onClick={() => setPageState('')}
-					className='inline-flex items-center my-2 px-3 py-1 mr-3 border  border-primary shadow-sm text-sm leading-4 font-medium rounded-md text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
+					className='inline-flex items-center my-2 px-3 py-2 mr-3 border border-primary shadow-sm text-sm leading-4 font-medium rounded-md text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
 				>
-					<svg
-						xmlns='http://www.w3.org/2000/svg'
-						fill='none'
-						viewBox='0 0 24 24'
-						stroke-width='1.5'
-						stroke='currentColor'
-						class='size-6'
-					>
-						<path
-							stroke-linecap='round'
-							stroke-linejoin='round'
-							d='m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
-						/>
-					</svg>
-					<span className='pl-2'>Scan again</span>
+					Scan again
 				</button>
 				<button
-					onClick={addToCart}
-					className='inline-flex items-center my-2 px-3 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-primary hover:bg-primaryHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
+					onClick={() => updateQuantity(productDetails?.productCode, quantity)}
+					className='inline-flex items-center my-2 px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-primary hover:bg-primaryHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
 				>
-					<svg
-						xmlns='http://www.w3.org/2000/svg'
-						fill='none'
-						viewBox='0 0 24 24'
-						stroke-width='1.5'
-						stroke='currentColor'
-						class='size-6'
-					>
-						<path
-							stroke-linecap='round'
-							stroke-linejoin='round'
-							d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z'
-						/>
-					</svg>
-
-					<span className='pl-2'>Add to Cart</span>
+					{loading ? (
+						<div className='flex item-center'>Loading...</div>
+					) : (
+						'Update Quantity'
+					)}
 				</button>
 			</div>
 		</div>
@@ -304,7 +298,7 @@ function Index() {
 		<Page>
 			<Section>
 				<h2 className='text-lg text-center px-2 md:text-3xl sm:text-xl font-semibold text-primary pb-2'>
-					Welcome to DWare, choose from wide range of products
+					Update quantity of products
 				</h2>
 
 				<div className='bg-white overflow-y-auto shadow sm:rounded-lg '>
@@ -315,4 +309,4 @@ function Index() {
 	)
 }
 
-export default Index
+export default Cart

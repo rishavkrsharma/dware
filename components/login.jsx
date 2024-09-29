@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useSetRecoilState } from 'recoil'
 import { authState } from '../recoil/atoms'
+import toast from 'react-hot-toast'
 
 function Login() {
 	const [phoneNumber, setPhoneNumber] = useState('')
@@ -13,23 +14,31 @@ function Login() {
 		e.preventDefault()
 		if (phoneNumber && password) {
 			setLoading(true)
-			if (prodId) {
-				try {
-					const response = await fetch(
-						`https://script.google.com/macros/s/AKfycbywxqoMLTpIYIt0hGQeDzohrlhlVs9WbWWLKjx7_BJOrBvlkJttEF8IY2qrtbtisnjc7g/exec?action=login&contact=${phoneNumber}&password=${password}`,
-					)
+			try {
+				const response = await fetch(
+					`https://script.google.com/macros/s/AKfycbyo-LkqKlF5fFx46UawDgxpPjdQkLGnKk_TK6cmrt9DOtmbKMiAWhXDJjKeT2WFMNNW/exec?action=login&contact=${phoneNumber}&password=${password}`,
+				)
 
-					const user = await response.json()
-					console.log('🚀 ~ handleScan ~ product:', user)
+				const user = await response.json()
+				if (user?.success) {
 					toast.success('Sign in successful!')
 					setLoading(false)
 					localStorage.setItem('authToken', 'dummy-token')
-					setAuth(true)
-				} catch (error) {
-					console.error('Error fetching user details:', error)
-					toast.error('User not found!')
-					setLoading(false)
+					setAuth({
+						isAuthenticated: true,
+						user: {
+							contact: user.contact,
+							name: user.name,
+							address: user.address,
+						},
+					})
+				} else {
+					toast.error('User not found, contact Admin!')
 				}
+			} catch (error) {
+				console.error('Error fetching user details:', error)
+				toast.error('User not found!')
+				setLoading(false)
 			}
 		} else {
 			setError('Invalid phone number or password')
@@ -38,19 +47,22 @@ function Login() {
 
 	return (
 		<div className='bg-green-50 h-screen'>
-			<div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
+			<div className='flex min-h-full flex-1 flex-col justify-center px-6 py-8 lg:px-6'>
 				<div className='sm:mx-auto sm:w-full sm:max-w-sm'>
 					<img
-						alt='Your Company'
-						src='https://tailwindui.com/img/logos/mark.svg?color=green&shade=800'
-						className='mx-auto h-10 w-auto'
+						alt='DWARE'
+						src='/images/icon-maskable-512.png'
+						className='mx-auto h-20 w-auto'
 					/>
 					<h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
+						Welcome to Dware
+					</h2>
+					<h2 className='text-center text-lg  tracking-tight text-gray-500'>
 						Sign in to your account
 					</h2>
 				</div>
 
-				<div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
+				<div className='mt-6 sm:mx-auto sm:w-full sm:max-w-sm'>
 					<form onSubmit={handleSubmit} className='space-y-6'>
 						<div>
 							<label
@@ -65,6 +77,7 @@ function Login() {
 									name='phone'
 									required
 									type='tel'
+									maxLength={10}
 									value={phoneNumber}
 									onChange={(e) => setPhoneNumber(e.target.value)}
 									autoComplete='email'

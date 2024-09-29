@@ -1,19 +1,24 @@
 import React, { useState } from 'react'
 import Page from '@/components/page'
+import toast from 'react-hot-toast'
 import { cartState, cartTotalState } from '@/recoil/atoms'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
+import { generateUniqueOrderId, orderMessage } from '../utils'
+import { authState } from '../recoil/atoms'
 
 function Cart() {
 	const [cart, setCart] = useRecoilState(cartState)
 	const total = useRecoilValue(cartTotalState)
 	const [open, setOpen] = useState(false)
 	const [loading, setLoading] = useState(false)
+	const [errors, setErrors] = useState({})
 	const [formData, setFormData] = useState({
 		customerName: '',
 		customerPhone: '',
 		customerAddress: '',
 	})
+	const auth = useRecoilValue(authState)
 
 	const updateQuantity = (index, change) => {
 		setCart((prevCart) => {
@@ -31,6 +36,9 @@ function Cart() {
 	}
 
 	const placeOrder = async () => {
+		if (!validateForm()) {
+			return
+		}
 		setLoading(true)
 		const orderId = generateUniqueOrderId()
 		const createdOn = new Date().toLocaleString()
@@ -45,20 +53,44 @@ function Cart() {
 			createdOn,
 		)
 
+		const formattedItems = cart
+			.map(
+				(item) =>
+					`- ${item.productCode} ${item.itemDescription}\n Quantity: ${item.quantity} @ ₹${item.price}/unit Available Stock: ${item.availableItems}\n Image: ${item.imageUrl}`,
+			)
+			.join('\n\n')
+
+		const sheetMessage = [
+			orderId,
+			`${auth?.user?.name} - ${auth?.user?.contact}`,
+			`${`Name: ${formData.customerName}\nPhone: ${formData.customerPhone}\nAddress: ${formData.customerAddress}`}`,
+			formattedItems,
+			'in-progress',
+			createdOn,
+		]
+
 		try {
-			const result = await sendMessage(message)
-			console.log('Message sent with order details:', result)
+			const [messageResult, fetchResponse] = await Promise.all([
+				sendMessage(message),
+				fetch(
+					'https://script.google.com/macros/s/AKfycbyo-LkqKlF5fFx46UawDgxpPjdQkLGnKk_TK6cmrt9DOtmbKMiAWhXDJjKeT2WFMNNW/exec',
+					{
+						method: 'POST',
+						body: JSON.stringify(sheetMessage),
+					},
+				),
+			])
+
 			setOpen(false)
 			toast.success(
 				`Order created successfully with orderId - ${orderId}. Save orderId for further assistance`,
-				orderId,
 				{
 					duration: 10000,
 				},
 			)
 			setLoading(false)
 		} catch (error) {
-			console.error('Failed to send order confirmation message:', error)
+			toast.error('Failed to create order.')
 			setLoading(false)
 		}
 	}
@@ -91,7 +123,6 @@ function Cart() {
 			}
 
 			const result = await response.json()
-			console.log('🚀 ~ sendMessage ~ result:', result)
 			return result
 		} catch (error) {
 			console.error('Error sending message:', error)
@@ -99,49 +130,17 @@ function Cart() {
 		}
 	}
 
-	function generateUniqueOrderId() {
-		const chars =
-			'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-		let randomPart = ''
+	const validateForm = () => {
+		let tempErrors = {}
+		if (!formData.customerName)
+			tempErrors.customerName = 'Customer name is required'
+		if (!formData.customerPhone)
+			tempErrors.customerPhone = 'Customer phone is required'
+		else if (formData.customerPhone.length !== 10)
+			tempErrors.customerPhone = 'Phone number must be 10 digits'
 
-		for (let i = 0; i < 5; i++) {
-			const randomIndex = Math.floor(Math.random() * chars.length)
-			randomPart += chars[randomIndex]
-		}
-
-		const timestampPart = Date.now().toString().slice(-4)
-		return randomPart + timestampPart
-	}
-
-	const orderMessage = (
-		orderId,
-		createdBy,
-		userName,
-		userContact,
-		userAddress,
-		items,
-		status,
-		createdOn,
-	) => {
-		const formattedItems = items
-			.map(
-				(item) =>
-					`- ${item.productCode} ${item.itemDescription}\n Quantity: ${item.quantity} @ ₹${item.price}/unit Available Stock: ${item.availableItems}\n Image: ${item.imageUrl}`,
-			)
-			.join('\n\n')
-
-		return (
-			`New Order Received! 🚀\n\n` +
-			`Order ID: ${orderId}\n` +
-			`Placed by: ${createdBy}\n` +
-			`Customer Name: ${userName}\n` +
-			`Contact: ${userContact}\n` +
-			`Address: ${userAddress}\n\n` +
-			`Items:\n${formattedItems}\n\n` +
-			`Status: ${status}\n` +
-			`Order Date: ${createdOn}\n\n` +
-			`Please process the order promptly.`
-		)
+		setErrors(tempErrors)
+		return Object.keys(tempErrors).length === 0
 	}
 
 	const handleChange = (e) => {
@@ -331,48 +330,65 @@ function Cart() {
 											<div className=''>
 												<label
 													htmlFor='first-name'
-													className='block text-sm font-medium leading-6 text-gray-900'
+													className='block text-sm font-medium text-gray-900'
 												>
 													Customer name
 												</label>
 												<div className='mt-2'>
 													<input
-														id='first-name'
+														id='customerName'
 														name='customerName'
 														type='text'
-														autoComplete='given-name'
 														value={formData.customerName}
 														onChange={handleChange}
-														className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'
+														className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 ${
+															errors.customerName
+																? 'border-red-500 ring-red-500'
+																: ''
+														}`}
 													/>
+													{errors.customerName && (
+														<p className='text-red-500 text-sm mt-1'>
+															{errors.customerName}
+														</p>
+													)}
 												</div>
 											</div>
 
-											<div className=''>
+											<div className='mt-3'>
 												<label
 													htmlFor='first-name'
-													className='block text-sm font-medium leading-6 text-gray-900'
+													className='block text-sm font-medium text-gray-900'
 												>
 													Customer phone no.
 												</label>
 												<div className='mt-2'>
 													<input
-														id='first-name'
+														id='customerPhone'
 														name='customerPhone'
 														type='text'
 														maxLength={10}
 														value={formData.customerPhone}
 														onChange={handleChange}
 														autoComplete='phone'
-														className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'
+														className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 ${
+															errors.customerPhone
+																? 'border-red-500 ring-red-500'
+																: ''
+														}`}
 													/>
+													{errors.customerPhone && (
+														<p className='text-red-500 text-sm mt-1'>
+															{errors.customerPhone}
+														</p>
+													)}
 												</div>
 											</div>
 
-											<div className='col-span-full'>
+											<div className='col-span-full mt-3'>
 												<label
 													htmlFor='about'
-													className='block text-sm font-medium leading-6 text-gray-900'
+													className='block text-sm font-medium text-gray-900'
 												>
 													Customer address
 												</label>
