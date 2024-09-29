@@ -24,7 +24,7 @@ export const orderMessage = (
 	const formattedItems = items
 		.map(
 			(item, index) =>
-				`${index}. Code: ${item.productCode}\nName: ${item.itemDescription}\nPrice: ₹${item.price}\nOrder Quantity: ${item.quantity}\nAvailable Quantity: ${item.availableItems}\nImage: ${item.imageUrl}\n`,
+				`${index + 1}. Code: ${item.productCode}\nName: ${item.itemDescription}\nPrice: ₹${item.price}\nOrder Quantity: ${item.quantity}\nAvailable Quantity: ${item.availableItems}\nImage: ${item.imageUrl}\n`,
 		)
 		.join('\n\n')
 
