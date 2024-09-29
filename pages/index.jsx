@@ -36,7 +36,7 @@ function Index() {
 		if (prodId) {
 			try {
 				const response = await fetch(
-					`https://script.google.com/macros/s/AKfycbywxqoMLTpIYIt0hGQeDzohrlhlVs9WbWWLKjx7_BJOrBvlkJttEF8IY2qrtbtisnjc7g/exec?action=getProduct&productCode=${prodId}`,
+					`https://script.google.com/macros/s/AKfycbyo-LkqKlF5fFx46UawDgxpPjdQkLGnKk_TK6cmrt9DOtmbKMiAWhXDJjKeT2WFMNNW/exec?action=getProduct&productCode=${prodId}`,
 				)
 
 				const product = await response.json()
