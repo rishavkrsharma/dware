@@ -55,7 +55,7 @@ function Index() {
 	}
 
 	const renderInitialState = () => (
-		<div className='flex text-center flex-col items-center justify-center'>
+		<div className='flex text-center flex-col items-center justify-center mb-40'>
 			<span className='text-3xl font-bold text-slate-800 mt-3'>
 				Scan or Search a Product
 			</span>
@@ -172,7 +172,7 @@ function Index() {
 	)
 
 	const renderScanner = () => (
-		<div className='flex flex-col items-center justify-center'>
+		<div className='flex flex-col items-center justify-center mb-20'>
 			<span className='text-md text-slate-800 mt-2'>
 				Hold your phone's camera up to a product's QR scan
 			</span>
@@ -207,7 +207,7 @@ function Index() {
 	)
 
 	const renderProductDetails = () => (
-		<div className='flex flex-col items-center justify-center'>
+		<div className='flex flex-col items-center mb-20 justify-center'>
 			<div className='max-h-md items-center max-w-60 shadow-lg mb-5 rounded-2xl'>
 				{productDetails && productDetails?.imageUrl ? (
 					<img

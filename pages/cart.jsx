@@ -194,7 +194,7 @@ function Cart() {
 								</svg>
 							</div>
 						) : (
-							<div className='flow-root'>
+							<div className='flow-root mb-16'>
 								<ul role='list' className='-my-6 divide-y divide-gray-200'>
 									{cart.map((item, index) => (
 										<li key={index} className='flex py-3'>
