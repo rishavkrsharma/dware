@@ -23,8 +23,8 @@ export const orderMessage = (
 ) => {
 	const formattedItems = items
 		.map(
-			(item) =>
-				`- ${item.productCode} ${item.itemDescription}\n Quantity: ${item.quantity} @ ₹${item.price}/unit Available Stock: ${item.availableItems}\n Image: ${item.imageUrl}`,
+			(item, index) =>
+				`${index}. Code: ${item.productCode}\nName: ${item.itemDescription}\nPrice: ₹${item.price}\nOrder Quantity: ${item.quantity}\nAvailable Quantity: ${item.availableItems}\nImage: ${item.imageUrl}\n`,
 		)
 		.join('\n\n')
 
