@@ -6,6 +6,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
 import { generateUniqueOrderId, orderMessage } from '../utils'
 import { authState } from '../recoil/atoms'
+import { BASE_URL } from '../constants/index.js'
 
 function Cart() {
 	const [cart, setCart] = useRecoilState(cartState)
@@ -72,13 +73,10 @@ function Cart() {
 		try {
 			const [messageResult, fetchResponse] = await Promise.all([
 				sendMessage(message),
-				fetch(
-					'https://script.google.com/macros/s/AKfycbyo-LkqKlF5fFx46UawDgxpPjdQkLGnKk_TK6cmrt9DOtmbKMiAWhXDJjKeT2WFMNNW/exec',
-					{
-						method: 'POST',
-						body: JSON.stringify(sheetMessage),
-					},
-				),
+				fetch(`${BASE_URL}`, {
+					method: 'POST',
+					body: JSON.stringify(sheetMessage),
+				}),
 			])
 
 			setOpen(false)

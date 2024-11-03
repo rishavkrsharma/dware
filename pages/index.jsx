@@ -5,6 +5,7 @@ import { useSetRecoilState } from 'recoil'
 import { cartState } from '../recoil/atoms'
 import { Scanner } from '@yudiel/react-qr-scanner'
 import toast from 'react-hot-toast'
+import { BASE_URL } from '../constants'
 
 function Index() {
 	const [pageState, setPageState] = useState('initial')
@@ -36,7 +37,7 @@ function Index() {
 		if (prodId) {
 			try {
 				const response = await fetch(
-					`https://script.google.com/macros/s/AKfycbyo-LkqKlF5fFx46UawDgxpPjdQkLGnKk_TK6cmrt9DOtmbKMiAWhXDJjKeT2WFMNNW/exec?action=getProduct&productCode=${prodId}`,
+					`${BASE_URL}?action=getProduct&productCode=${prodId}`,
 				)
 
 				const product = await response.json()

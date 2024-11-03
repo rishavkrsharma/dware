@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useSetRecoilState } from 'recoil'
 import { authState } from '../recoil/atoms'
 import toast from 'react-hot-toast'
+import { BASE_URL } from '../constants'
 
 function Login() {
 	const [phoneNumber, setPhoneNumber] = useState('')
@@ -16,7 +17,7 @@ function Login() {
 			setLoading(true)
 			try {
 				const response = await fetch(
-					`https://script.google.com/macros/s/AKfycbyo-LkqKlF5fFx46UawDgxpPjdQkLGnKk_TK6cmrt9DOtmbKMiAWhXDJjKeT2WFMNNW/exec?action=login&contact=${phoneNumber}&password=${password}`,
+					`${BASE_URL}?action=login&contact=${phoneNumber}&password=${password}`,
 				)
 
 				const user = await response.json()

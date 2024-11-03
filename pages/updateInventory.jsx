@@ -3,6 +3,7 @@ import Section from '@/components/section'
 import React, { useState } from 'react'
 import { Scanner } from '@yudiel/react-qr-scanner'
 import toast from 'react-hot-toast'
+import { BASE_URL } from '../constants'
 
 function Cart() {
 	const [pageState, setPageState] = useState('initial')
@@ -16,7 +17,7 @@ function Cart() {
 		if (prodId) {
 			try {
 				const response = await fetch(
-					`https://script.google.com/macros/s/AKfycbyo-LkqKlF5fFx46UawDgxpPjdQkLGnKk_TK6cmrt9DOtmbKMiAWhXDJjKeT2WFMNNW/exec?action=getProduct&productCode=${prodId}`,
+					`${BASE_URL}?action=getProduct&productCode=${prodId}`,
 				)
 
 				const product = await response.json()
@@ -192,7 +193,7 @@ function Cart() {
 		if (code) {
 			try {
 				const response = await fetch(
-					`https://script.google.com/macros/s/AKfycbyo-LkqKlF5fFx46UawDgxpPjdQkLGnKk_TK6cmrt9DOtmbKMiAWhXDJjKeT2WFMNNW/exec?action=update&productCode=${code}&quantity=${quantity}`,
+					`${BASE_URL}?action=update&productCode=${code}&quantity=${quantity}`,
 				)
 				const product = await response.json()
 				console.log('🚀 ~ updateQuantity ~ product:', product)
